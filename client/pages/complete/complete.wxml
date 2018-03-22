@@ -1,4 +1,4 @@
-<view class="page__bd">
+<view class="page">
   <view style="height: {{windowHeight}}px; width: {{windowWidth}}px;" class="back_img">
   </view>
   <view style="position:absolute;top:{{windowHeight * 0.06}}px;">
