@@ -6,24 +6,22 @@ var util = require('../utils/util.js')
 Page({
   data: {
     requestResult: '',
+    requestResultList: '',
     canIUseClipboard: wx.canIUse('setClipboardData'),
-    updateId:'',
-    delId:''
+    cacheId:''
   },
-
   testQuery: function () {
     util.showBusy('请求中...')
     var that = this
     qcloud.request({
       url: `${config.service.host}/weapp/db.query`,
       login: true,
-      data: { "id": that.data.updateId },
+      // data: { "id": that.data.updateId },
       success(result) {
         util.showSuccess('请求成功完成')
         that.setData({
           requestResult: JSON.stringify(result.data),
-          updateId: result.data.data.id,
-          delId: result.data.data.id
+          cacheId: result.data.data.id
         })
         code[code.length] = JSON.stringify(result.data.data)
       },
@@ -47,12 +45,9 @@ Page({
       data: bookBo,
       success(result) {
         util.showSuccess('请求成功完成')
-        console.log('request result->', result);
-        console.log('request result->', result.data.data);
         that.setData({
           requestResult: JSON.stringify(result.data),
-          updateId: result.data.data.id,
-          delId: result.data.data.id
+          cacheId: result.data.data.id
         })
         // 同步方式存储数据
         wx.setStorageSync('bookId', result.data.data.id);
@@ -70,7 +65,7 @@ Page({
     qcloud.request({
       url: `${config.service.host}/weapp/db.update`,
       login: true,
-      data: {"id":that.data.updateId},
+      data: { "id": that.data.cacheId},
       success(result) {
         util.showSuccess('请求成功完成')
         that.setData({
@@ -90,11 +85,31 @@ Page({
     qcloud.request({
       url: `${config.service.host}/weapp/db.del`,
       login: true,
-      data: { "id": that.data.delId },
+      data: { "id": that.data.cacheId },
       success(result) {
         util.showSuccess('请求成功完成')
         that.setData({
           requestResult: JSON.stringify(result.data)
+        })
+      },
+      fail(error) {
+        util.showModel('请求失败', error);
+        console.log('request fail', error);
+      }
+    })
+  },
+  testMultiQuery: function () {
+    util.showBusy('请求中...')
+    var that = this
+    qcloud.request({
+      url: `${config.service.host}/weapp/db.query`,
+      login: true,
+      // data: { "id": that.data.updateId },
+      success(result) {
+        util.showSuccess('请求成功完成')
+        that.setData({
+          requestResult: JSON.stringify(result.data),
+          cacheId: result.data.data.id
         })
         code[code.length] = JSON.stringify(result.data.data)
       },
@@ -129,8 +144,7 @@ Page({
     console.log('缓存的书本id：'+bookId);
     if (bookId) {
       this.setData({
-        updateId: bookId,
-        delId: bookId
+        cacheId: bookId
       });
       //查询
       this.testQuery();

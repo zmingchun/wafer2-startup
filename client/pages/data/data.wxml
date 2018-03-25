@@ -15,13 +15,21 @@
       <text>删除</text>
     </view>
     <view class="list-item" bindtap="testQuery">
-      <text>查询</text>
+      <text>主键查询</text>
+    </view>
+    <view class="list-item" bindtap="testMultiQuery">
+      <text>复杂查询</text>
     </view>
     <view class="list-item">
       <text class="request-text">期望输出：{"code":0,"data":{"msg":"执行的输出结果"}}</text>
     </view>
     <view class="list-item" wx:if="{{requestResult}}">
       <text class="request-text">{{'请求结果：' + requestResult}}</text>
+    </view>
+    <view class="list-item" wx:if="{{requestResultList}}">
+      <view wx:for="{{requestResultList}}">
+        <text class="request-text">{{index}}: {{item.name}}</text>
+      </view>
     </view>
     <button class="copyBtn" wx:if="{{canIUseClipboard}}" bindtap="copyCode" data-code-id="1">复制结果</button>
   </view>
